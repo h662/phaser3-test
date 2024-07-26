@@ -37,6 +37,11 @@
       var score = 0;
       var scoreText;
       var bombs;
+      var leftButton;
+      var rightButton;
+      var jumpButton;
+      var isLeftPressed = false;
+      var isRightPressed = false;
 
       var game = new Phaser.Game(config);
 
@@ -45,6 +50,10 @@
         this.load.image("ground", "assets/platform.png");
         this.load.image("star", "assets/star.png");
         this.load.image("bomb", "assets/bomb.png");
+        this.load.image("leftButton", "assets/left.png");
+        this.load.image("rightButton", "assets/right.png");
+        this.load.image("jumpButton", "assets/jump.png");
+
         this.load.spritesheet("dude", "assets/dude.png", {
           frameWidth: 32,
           frameHeight: 48,
@@ -112,22 +121,45 @@
         this.physics.add.collider(bombs, platforms);
 
         this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+        leftButton = this.add.image(50, 550, "leftButton").setInteractive();
+        rightButton = this.add.image(150, 550, "rightButton").setInteractive();
+        jumpButton = this.add.image(750, 550, "jumpButton").setInteractive();
+
+        leftButton.on("pointerdown", function () {
+          isLeftPressed = true;
+        });
+
+        leftButton.on("pointerup", function () {
+          isLeftPressed = false;
+        });
+
+        rightButton.on("pointerdown", function () {
+          isRightPressed = true;
+        });
+
+        rightButton.on("pointerup", function () {
+          isRightPressed = false;
+        });
+
+        jumpButton.on("pointerdown", function () {
+          if (player.body.touching.down) {
+            player.setVelocityY(-330);
+          }
+        });
       }
 
       function update() {
         cursors = this.input.keyboard.createCursorKeys();
 
-        if (cursors.left.isDown) {
+        if (cursors.left.isDown || isLeftPressed) {
           player.setVelocityX(-160);
-
           player.anims.play("left", true);
-        } else if (cursors.right.isDown) {
+        } else if (cursors.right.isDown || isRightPressed) {
           player.setVelocityX(160);
-
           player.anims.play("right", true);
         } else {
           player.setVelocityX(0);
-
           player.anims.play("turn");
         }
 
