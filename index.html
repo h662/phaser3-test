@@ -28,6 +28,9 @@
           create,
           update,
         },
+        input: {
+          activePointers: 3,
+        },
       };
 
       var player;
@@ -157,11 +160,11 @@
           }
         });
 
-        jumpButton.on("pointerup", function (pointer) {
+        jumpButton.on("pointerup", function () {
           isJumpPressed = false;
         });
 
-        jumpButton.on("pointerout", function (pointer) {
+        jumpButton.on("pointerout", function () {
           isJumpPressed = false;
         });
       }
